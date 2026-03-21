@@ -5,14 +5,18 @@ with sync_playwright() as pl:
     context = chrom.new_context()
     page = context.new_page()
     page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration')
-    regEmail = page.locator('//div[@data-testid="registration-form-email-input"]//input')
-    regEmail.fill('user.name@gmail.com')
-    regUsername = page.locator('//div[@data-testid="registration-form-username-input"]//input')
-    regUsername.fill('username')
-    regPassword = page.locator('//div[@data-testid="registration-form-password-input"]//input')
-    regPassword.fill('password')
-    regButton = page.locator('//button[@data-testid="registration-page-registration-button"]')
-    regButton.click()
+
+    emailInput = page.get_by_test_id('registration-form-email-input').locator('input')
+    emailInput.fill('user.name@gmail.com')
+
+    usernameInput = page.get_by_test_id('registration-form-username-input').locator('input')
+    usernameInput.fill('username')
+
+    passwordInput = page.get_by_test_id('registration-form-password-input').locator('input')
+    passwordInput.fill('password')
+
+    registrationButton = page.get_by_test_id('registration-page-registration-button')
+    registrationButton.click()
     context.storage_state(path='browser-state.json')
 
 
@@ -21,14 +25,15 @@ with sync_playwright() as pl:
     context = chrom.new_context(storage_state='browser-state.json')
     page = context.new_page()
     page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/courses')
-    courses = page.get_by_test_id('courses-list-toolbar-title-text')
-    icon = page.get_by_test_id('courses-list-empty-view-icon')
-    noResults = page.get_by_test_id('courses-list-empty-view-title-text')
+
+    coursesHeader = page.get_by_test_id('courses-list-toolbar-title-text')
+    expect(coursesHeader).to_have_text('Courses')
+
+    folderIcon = page.get_by_test_id('courses-list-empty-view-icon')
+    expect(folderIcon).to_be_visible()
+
+    resultHeader = page.get_by_test_id('courses-list-empty-view-title-text')
+    expect(resultHeader).to_have_text('There is no results')
+
     descriptionLine = page.get_by_test_id('courses-list-empty-view-description-text')
-    expect(courses).to_have_text('Courses')
-    expect(noResults).to_have_text('There is no results')
-    expect(icon).to_be_visible()
     expect(descriptionLine).to_have_text('Results from the load test pipeline will be displayed here')
-
-
-
