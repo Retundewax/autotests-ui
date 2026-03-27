@@ -1,5 +1,8 @@
 from playwright.sync_api import sync_playwright, expect
+import pytest
 
+@pytest.mark.courses
+@pytest.mark.regression
 def test_empty_courses_list():
     with sync_playwright() as pl:
         chrom = pl.chromium.launch(headless=False)
@@ -7,17 +10,17 @@ def test_empty_courses_list():
         page = context.new_page()
         page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration')
 
-        emailInput = page.get_by_test_id('registration-form-email-input').locator('input')
-        emailInput.fill('user.name@gmail.com')
+        email_input = page.get_by_test_id('registration-form-email-input').locator('input')
+        email_input.fill('user.name@gmail.com')
 
-        usernameInput = page.get_by_test_id('registration-form-username-input').locator('input')
-        usernameInput.fill('username')
+        username_input = page.get_by_test_id('registration-form-username-input').locator('input')
+        username_input.fill('username')
 
-        passwordInput = page.get_by_test_id('registration-form-password-input').locator('input')
-        passwordInput.fill('password')
+        password_input = page.get_by_test_id('registration-form-password-input').locator('input')
+        password_input.fill('password')
 
-        registrationButton = page.get_by_test_id('registration-page-registration-button')
-        registrationButton.click()
+        registration_button = page.get_by_test_id('registration-page-registration-button')
+        registration_button.click()
         context.storage_state(path='browser-state.json')
 
     with sync_playwright() as pl:
@@ -26,14 +29,14 @@ def test_empty_courses_list():
         page = context.new_page()
         page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/courses')
 
-        coursesHeader = page.get_by_test_id('courses-list-toolbar-title-text')
-        expect(coursesHeader).to_have_text('Courses')
+        courses_header = page.get_by_test_id('courses-list-toolbar-title-text')
+        expect(courses_header).to_have_text('Courses')
 
-        folderIcon = page.get_by_test_id('courses-list-empty-view-icon')
-        expect(folderIcon).to_be_visible()
+        folder_icon = page.get_by_test_id('courses-list-empty-view-icon')
+        expect(folder_icon).to_be_visible()
 
-        resultHeader = page.get_by_test_id('courses-list-empty-view-title-text')
-        expect(resultHeader).to_have_text('There is no results')
+        result_header = page.get_by_test_id('courses-list-empty-view-title-text')
+        expect(result_header).to_have_text('There is no results')
 
-        descriptionLine = page.get_by_test_id('courses-list-empty-view-description-text')
-        expect(descriptionLine).to_have_text('Results from the load test pipeline will be displayed here')
+        description_line = page.get_by_test_id('courses-list-empty-view-description-text')
+        expect(description_line).to_have_text('Results from the load test pipeline will be displayed here')
