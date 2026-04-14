@@ -26,7 +26,11 @@ def initialize_browser_state(playwright: Playwright) -> Page:
 def chromium_page_with_state(initialize_browser_state, playwright: Playwright) -> Page:
     chrom = playwright.chromium.launch(headless=False)
     context = chrom.new_context(storage_state='browser-state.json')
-    page = context.new_page()
-    page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/courses')
-    yield page
+    yield context.new_page()
+    chrom.close()
+
+@pytest.fixture
+def chromium_page(playwright: Playwright) -> Page:
+    chrom = playwright.chromium.launch(headless=False)
+    yield chrom.new_page()
     chrom.close()
